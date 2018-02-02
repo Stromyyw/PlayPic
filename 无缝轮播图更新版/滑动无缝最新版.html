@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+		*{margin:0;padding:0;}
+		#pic{
+			width:1000px;
+			height:409px;
+			margin:100px auto;
+			overflow: hidden;
+			position: relative;
+		}
+		ul{
+			width: 7000px;
+			height:409px;
+		}
+		li{
+			list-style: none;
+			float:left;
+		}
+		#up{
+			position: absolute;
+			top:45%;
+			left:20px;
+			cursor: pointer;
+			transition:all .5s;
+			opacity: 0.5;
+		}
+		#down{
+			position: absolute;
+			top:45%;
+			right:20px;
+			cursor: pointer;
+			transition:all .5s;
+			opacity: 0.5;
+		}
+		#up:hover,#down:hover{
+			transform:scale(1.1);
+			opacity: 1;
+		}
+		#nav{
+			position: absolute;
+			top:370px;
+			left:45%;
+		}
+		#nav span{
+			float:left;
+			margin:5px;
+			width:16px;
+			height:16px;
+			border-radius:50%;
+			background-color: #e3e3e3;
+			font-size: 0;
+			cursor: pointer;
+			display: block;
+		}
+		#nav .focus{
+			background-color: #dd4012;
+		}
+	</style>
+</head>
+<body>
+	<div id="pic">
+		<ul style="margin-left:0;">
+			<li><img src="images/1.jpg" alt=""></li>
+			<li><img src="images/2.jpg" alt=""></li>
+			<li><img src="images/3.jpg" alt=""></li>
+			<li><img src="images/4.jpg" alt=""></li>
+			<li><img src="images/5.jpg" alt=""></li>
+			<li><img src="images/6.jpg" alt=""></li>
+		</ul>
+		<div id="up">
+			<img src="images/l.png" alt="">
+		</div>
+		<div id="down">
+			<img src="images/r.png" alt="">
+		</div>
+		<div id="nav"></div>
+	</div>
+	<script>
+		var pic = document.getElementById("pic")
+		var ul = pic.getElementsByTagName("ul")[0]
+		var liList = ul.getElementsByTagName("li")
+		var up = document.getElementById("up")
+		var down = document.getElementById("down")
+		var nav = document.getElementById("nav")
+		var spanList = nav.getElementsByTagName("span")
+		var a = 0
+		var b = 0
+		var allpic = liList.length
+		var cloneHas = false
+		var animationLocal = false
+		function animation(move){
+			dotfunction()
+			// spanList[d].onclick()
+			start = setInterval(function(){
+				animationLocal = true
+				ml = parseInt(ul.style.marginLeft)
+				if (ml == a * (-1000)) {
+					clearInterval(start)
+					animationLocal = false
+					if (a == allpic) {
+						ul.style.marginLeft = 0
+						ul.removeChild(newLi)
+						a = 0
+					}
+					if (cloneHas) {
+						ul.style.marginLeft = (1-allpic)*1000 + "px"
+						ul.removeChild(newLi)
+						a = allpic - 1
+						cloneHas = false
+					}
+					return
+				}
+				if (move == "up") {
+					ul.style.marginLeft = ml + (Math.ceil((a*(-1000)-ml)/15)) + "px"
+				}
+				if (move == "down") {
+					ul.style.marginLeft = ml + (Math.floor((a*(-1000)-ml)/15)) + "px"
+				}
+			},15)
+		}
+		for (var c = 0; c < allpic; c++) {
+			var span = document.createElement("span")
+			nav.appendChild(span)
+			span.setAttribute("num",c)
+		}
+		function dotfunction(){
+			spanList[0].className = "focus"
+			for (var c = 0; c < allpic; c++) {
+				spanList[c].className = ""
+
+			}
+			spanList[b].className = "focus"
+		}
+		dotfunction()
+		down.onclick = function () {
+			if (!animationLocal) {
+				a++
+				if (a == allpic) {
+					newLi = liList[0].cloneNode(true)
+					ul.appendChild(newLi)
+					b = 0	
+				}
+				else{
+					b++
+				}
+			animation("down")
+			}
+		}
+		up.onclick = function () {
+			if (!animationLocal) {
+				a--
+				if (a !== -1) {
+					b--
+					animation("up")
+				}
+				else{
+					a = 0
+					newLi = liList[liList.length-1].cloneNode(true)
+					ul.insertBefore(newLi,ul.firstChild)
+					ul.style.marginLeft = "-1000" + "px"
+					b = allpic - 1
+					animation("up")
+					cloneHas = true
+				}
+			}	
+		}
+		autoPlay = setInterval(function(){
+			down.onclick()
+		},3000)
+		pic.onmouseenter = function(){
+			clearInterval(autoPlay)
+		}
+		pic.onmouseleave = function(){
+			autoPlay = setInterval(function(){
+				down.onclick()
+			},3000)
+		}
+		for (var d = 0; d < spanList.length; d++) {
+			spanList[d].onclick = function(){
+				b = this.getAttribute("num")			
+				if (b > a) {
+					b = this.getAttribute("num")
+					a = b
+					animation("down")
+				}
+				if(b < a){
+					b = this.innerHTML
+					a = b
+					animation("up")
+				}
+			}
+		}	
+	</script>
+</body>
+</html>
