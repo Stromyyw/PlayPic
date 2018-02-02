@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<div id="obj">
+		<p>我是P1</p>
+		<p>我是P1</p>
+		<p class="p3">我是p3</p>
+		<p>我是p4</p>
+		<p>我是p5</p>
+	</div>
+	<!-- codeHub -->
+	<script>
+		var obj=document.getElementById("obj")
+		var p3=obj.getElementsByClassName("p3")[0]
+		// 创建一个p标签
+		var newElement=document.createElement("p")
+		var body=document.getElementsByTagName("body")[0]
+		newElement.innerHTML="我是新插入的p标签"
+		// 在body标签结束之前插入新建的p标签
+		// body.appendChild(newElement).
+		// 在obj里面的p3之前插入新建的p标签
+		// obj.insertBefore(newElement,p3)
+		function insertAfter(newElement,p3){
+			var parent=p3.parentNode
+			if (parent.lastChild == p3) {
+				parent.appendChild(newElement)
+			} else{
+				parent.insertBefore(newElement,p3.nextSibling)
+			}
+			// return parent.insertBefore(newElement,p3.nextSibling)
+		}
+			insertAfter(newElement,p3)
+	</script>
+</body>
+</html>
